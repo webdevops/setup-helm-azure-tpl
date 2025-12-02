@@ -1,0 +1,61 @@
+name: setup-helm-azure-tpl
+description: Setup Helm azure-tpl plugin
+
+
+inputs:
+  version:
+    description: Plugin version
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Install Helm azure-tpl plugin"
+      shell: bash
+      run: |
+        #!/bin/bash
+        set -e
+        
+        if [[ -z "$AZURE_TPL_VERSION" || "$AZURE_TPL_VERSION" == "latest" ]]; then
+                AZURE_TPL_VERSION="main"
+        fi
+        
+        echo "getting version of Helm"
+        HELM_VERSION_TEXT=$(helm version --template='{{.Version}}')
+        echo "got Helm version \"${HELM_VERSION_TEXT}\""
+        
+        HELM_VERSION=""
+        if [[ "$HELM_VERSION_TEXT" == "v3."* ]]; then
+                echo "detected Helm v3"
+                HELM_VERSION=3
+        elif [[ "$HELM_VERSION_TEXT" == "v4."* ]]; then
+                echo "detected Helm v4"
+                HELM_VERSION=4
+        else
+                echo "invalid Helm version found: ${HELM_VERSION_TEXT}"
+                exit 1
+        fi
+        
+        case "$HELM_VERSION" in
+                3)
+                        echo "uninstall plugin"
+                        helm plugin uninstall azure-tpl || true
+        
+                        echo "install plugin (version: $AZURE_TPL_VERSION)"
+                        helm plugin install https://github.com/webdevops/helm-azure-tpl.git --version="$AZURE_TPL_VERSION"
+                        ;;
+        
+                4)
+                        echo "uninstall plugin"
+                        helm plugin uninstall azure-tpl || true
+        
+                        echo "install plugin (version: $AZURE_TPL_VERSION)"
+                        helm plugin install https://github.com/webdevops/helm-azure-tpl.git --version="$AZURE_TPL_VERSION" --verify=false
+                        ;;
+        
+                *)
+                        echo "invalid Helm version found, only version 3 or 4 are supported: ${HELM_VERSION_TEXT}"
+                        exit 1
+        esac
+        echo "succeeded"
+        exit 0
