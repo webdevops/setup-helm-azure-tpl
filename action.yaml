@@ -60,5 +60,5 @@ runs:
         echo "succeeded"
         exit 0
       env:
-        AZURE_TPL_VERSION: ${{ input.version }}
+        AZURE_TPL_VERSION: ${{ inputs.version }}
         HOSTEDTOOLCACHE: ${{ runner.tool_cache }}
