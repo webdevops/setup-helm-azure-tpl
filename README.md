@@ -1,5 +1,5 @@
 # Setup helm azure-tpl
-Github action for setting up helm azure-tpl plugin
+Github action for setting up [helm azure-tpl plugin](https://github.com/webdevops/helm-azure-tpl) (requires Helm v3 or v4)
 
 ## Usage:
 
