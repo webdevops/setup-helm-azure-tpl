@@ -59,3 +59,6 @@ runs:
         esac
         echo "succeeded"
         exit 0
+      env:
+        AZURE_TPL_VERSION: ${{ input.version }}
+        HOSTEDTOOLCACHE: ${{ runner.tool_cache }}
