@@ -37,7 +37,7 @@ runs:
         fi
 
         # add helm env vars
-        export $(helm env)
+        eval $(helm env)
 
         echo "helm plugin dir: ${HELM_PLUGINS}"
         
