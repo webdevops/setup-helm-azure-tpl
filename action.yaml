@@ -35,6 +35,11 @@ runs:
                 echo "invalid Helm version found: ${HELM_VERSION_TEXT}"
                 exit 1
         fi
+
+        # add helm env vars
+        export $(helm env)
+
+        echo "helm plugin dir: ${HELM_PLUGINS}"
         
         case "$HELM_VERSION" in
                 3)
