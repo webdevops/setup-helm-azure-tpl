@@ -11,5 +11,6 @@ Latest version:
 Specific version
 ```
 - uses: webdevops/setup-helm-azure-tpl@main
-  version: 0.61.0
+  with:
+    version: 0.61.0
 ```
