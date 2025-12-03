@@ -37,10 +37,11 @@ runs:
         fi
         echo "::endgroup::"
 
+        echo "::group::detect helm environment"
         # add helm env vars
         eval $(helm env)
-
-        echo "helm plugin dir: ${HELM_PLUGINS}"
+        echo "helm plugin path: ${HELM_PLUGINS}"
+        echo "::endgroup::"
         
         case "$HELM_VERSION" in
                 3)
@@ -54,7 +55,7 @@ runs:
                         helm plugin install https://github.com/webdevops/helm-azure-tpl.git --version="$AZURE_TPL_GIT_VERSION"
                         echo "::endgroup::"
                         ;;
-        
+
                 4)
                         echo "::group::uninstall Helm v4 plugin"
                         helm plugin uninstall azure-tpl || true
@@ -76,4 +77,4 @@ runs:
         exit 0
       env:
         AZURE_TPL_VERSION: ${{ inputs.version }}
-        HOSTEDTOOLCACHE: ${{ runner.tool_cache }}
+        $RUNNER_TOOL_CACHE: ${{ runner.tool_cache }}
