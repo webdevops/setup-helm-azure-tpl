@@ -17,10 +17,10 @@ runs:
         
         if [[ -z "$AZURE_TPL_VERSION" || "$AZURE_TPL_VERSION" == "latest" ]]; then
                 AZURE_TPL_GIT_VERSION="main"
-                AZURE_TPL_OCI_VERSION="latest"
+                AZURE_TPL_RELEASE_VERSION="latest"
         fi
         
-        echo "getting version of Helm"
+        echo "::group::detect helm version"
         HELM_VERSION_TEXT=$(helm version --template='{{.Version}}')
         echo "got Helm version \"${HELM_VERSION_TEXT}\""
         
@@ -35,6 +35,7 @@ runs:
                 echo "invalid Helm version found: ${HELM_VERSION_TEXT}"
                 exit 1
         fi
+        echo "::endgroup::"
 
         # add helm env vars
         eval $(helm env)
@@ -43,24 +44,28 @@ runs:
         
         case "$HELM_VERSION" in
                 3)
-                        echo "uninstall plugin"
+                        echo "::group::uninstall Helm v3 plugin"
                         helm plugin uninstall azure-tpl || true
                         helm plugin uninstall azure-tpl-cli || true
                         helm plugin uninstall azure-tpl-getter || true
+                        echo "::endgroup::"
         
-                        echo "install plugin via git (version: $AZURE_TPL_GIT_VERSION)"
+                        echo "::group::install Helm v3 plugin (version: $AZURE_TPL_GIT_VERSION)"
                         helm plugin install https://github.com/webdevops/helm-azure-tpl.git --version="$AZURE_TPL_GIT_VERSION"
+                        echo "::endgroup::"
                         ;;
         
                 4)
-                        echo "uninstall plugin"
+                        echo "::group::uninstall Helm v4 plugin"
                         helm plugin uninstall azure-tpl || true
                         helm plugin uninstall azure-tpl-cli || true
                         helm plugin uninstall azure-tpl-getter || true
+                        echo "::endgroup::"
         
-                        echo "install plugin via oci (version: $AZURE_TPL_OCI_VERSION)"
-                        helm plugin install "oci://ghcr.io/webdevops/helm-azure-tpl/azure-tpl-cli:${AZURE_TPL_OCI_VERSION}" --verify=false
-                        helm plugin install "oci://ghcr.io/webdevops/helm-azure-tpl/azure-tpl-getter:${AZURE_TPL_OCI_VERSION}" --verify=false
+                        echo "::group::install Helm v4 plugin (version: $AZURE_TPL_RELEASE_VERSION)"
+                        helm plugin install "https://github.com/webdevops/helm-azure-tpl/releases/${AZURE_TPL_RELEASE_VERSION}/download/azure-tpl-cli.tgz" --verify=false
+                        helm plugin install "https://github.com/webdevops/helm-azure-tpl/releases/${AZURE_TPL_RELEASE_VERSION}/download/azure-tpl-getter.tgz" --verify=false
+                        echo "::endgroup::"
                         ;;
         
                 *)
