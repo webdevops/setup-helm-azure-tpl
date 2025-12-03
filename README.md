@@ -5,12 +5,12 @@ Github action for setting up [helm azure-tpl plugin](https://github.com/webdevop
 
 Latest version:
 ```
-- uses: webdevops/setup-helm-azure-tpl@main
+- uses: webdevops/setup-helm-azure-tpl@v1
 ```
 
 Specific version
 ```
-- uses: webdevops/setup-helm-azure-tpl@main
+- uses: webdevops/setup-helm-azure-tpl@v1
   with:
-    version: 0.61.0
+    version: 0.63.7
 ```

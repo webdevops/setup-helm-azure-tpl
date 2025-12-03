@@ -17,7 +17,8 @@ runs:
         set -e
         
         if [[ -z "$AZURE_TPL_VERSION" || "$AZURE_TPL_VERSION" == "latest" ]]; then
-                AZURE_TPL_VERSION="main"
+                AZURE_TPL_GIT_VERSION="main"
+                AZURE_TPL_OCI_VERSION="latest"
         fi
         
         echo "getting version of Helm"
@@ -46,16 +47,17 @@ runs:
                         echo "uninstall plugin"
                         helm plugin uninstall azure-tpl || true
         
-                        echo "install plugin (version: $AZURE_TPL_VERSION)"
-                        helm plugin install https://github.com/webdevops/helm-azure-tpl.git --version="$AZURE_TPL_VERSION"
+                        echo "install plugin via git (version: $AZURE_TPL_GIT_VERSION)"
+                        helm plugin install https://github.com/webdevops/helm-azure-tpl.git --version="$AZURE_TPL_GIT_VERSION"
                         ;;
         
                 4)
                         echo "uninstall plugin"
                         helm plugin uninstall azure-tpl || true
         
-                        echo "install plugin (version: $AZURE_TPL_VERSION)"
-                        helm plugin install https://github.com/webdevops/helm-azure-tpl.git --version="$AZURE_TPL_VERSION" --verify=false
+                        echo "install plugin via oci (version: $AZURE_TPL_OCI_VERSION)"
+                        helm plugin install "oci://ghcr.io/webdevops/helm-azure-tpl/azure-tpl-cli:${AZURE_TPL_OCI_VERSION}" --verify=false
+                        helm plugin install "oci://ghcr.io/webdevops/helm-azure-tpl/azure-tpl-getter:${AZURE_TPL_OCI_VERSION}" --verify=false
                         ;;
         
                 *)
