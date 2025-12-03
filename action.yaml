@@ -1,7 +1,6 @@
 name: setup-helm-azure-tpl
 description: Setup Helm azure-tpl plugin
 
-
 inputs:
   version:
     description: Plugin version
@@ -46,6 +45,8 @@ runs:
                 3)
                         echo "uninstall plugin"
                         helm plugin uninstall azure-tpl || true
+                        helm plugin uninstall azure-tpl-cli || true
+                        helm plugin uninstall azure-tpl-getter || true
         
                         echo "install plugin via git (version: $AZURE_TPL_GIT_VERSION)"
                         helm plugin install https://github.com/webdevops/helm-azure-tpl.git --version="$AZURE_TPL_GIT_VERSION"
@@ -54,6 +55,8 @@ runs:
                 4)
                         echo "uninstall plugin"
                         helm plugin uninstall azure-tpl || true
+                        helm plugin uninstall azure-tpl-cli || true
+                        helm plugin uninstall azure-tpl-getter || true
         
                         echo "install plugin via oci (version: $AZURE_TPL_OCI_VERSION)"
                         helm plugin install "oci://ghcr.io/webdevops/helm-azure-tpl/azure-tpl-cli:${AZURE_TPL_OCI_VERSION}" --verify=false
